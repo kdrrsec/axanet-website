@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
           name: naam.trim(),
           message: `Organisatie: ${organisatie.trim()}\n\nBericht:\n${bericht?.trim() ?? ""}`,
           from_name: naam.trim(),
+          replyto: email.trim(),
           naam: naam.trim(),
           organisatie: organisatie.trim(),
           email: email.trim(),
@@ -66,20 +67,39 @@ export async function POST(request: NextRequest) {
         }),
       });
 
-      if (!res.ok) {
-        const text = await res.text();
-        console.error("Web3Forms error:", res.status, text);
+      const raw = await res.text();
+      let payload: { success?: boolean; message?: string } = {};
+      try {
+        payload = JSON.parse(raw) as { success?: boolean; message?: string };
+      } catch {
+        console.error("Web3Forms non-JSON response:", res.status, raw);
         return NextResponse.json(
-          { error: "Versturen mislukt" },
+          {
+            error:
+              raw.trim().slice(0, 400) ||
+              `E-maildienst reageerde onverwacht (HTTP ${res.status}).`,
+          },
           { status: 502 }
         );
       }
 
-      const data = (await res.json()) as { success?: boolean; message?: string };
-      if (!data.success) {
-        console.error("Web3Forms API failure:", data);
+      if (!res.ok) {
+        console.error("Web3Forms HTTP error:", res.status, payload, raw);
         return NextResponse.json(
-          { error: data.message ?? "Versturen mislukt" },
+          {
+            error:
+              payload.message ||
+              raw.trim().slice(0, 400) ||
+              `Versturen mislukt (HTTP ${res.status}).`,
+          },
+          { status: 502 }
+        );
+      }
+
+      if (!payload.success) {
+        console.error("Web3Forms API failure:", payload);
+        return NextResponse.json(
+          { error: payload.message ?? "Versturen mislukt" },
           { status: 502 }
         );
       }
