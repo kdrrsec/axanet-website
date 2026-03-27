@@ -32,7 +32,7 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           <Link
             href="/"
-            className="-ml-2 mt-1.5 flex shrink-0 items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1220] rounded"
+            className="-ml-3 mt-1.5 flex shrink-0 items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1220] rounded sm:-ml-2"
             aria-label="Axanet - naar homepage"
           >
             <img
@@ -79,35 +79,43 @@ export function Header() {
         </div>
 
         {open && (
-          <div
-            id="mobile-nav"
-            className="border-t border-white/10 bg-[#0B1220] py-4 shadow-lg md:hidden"
-          >
-            <ul className="flex flex-col gap-0.5">
-              {links.map(({ href, label }) => (
-                <li key={href}>
+          <>
+            <button
+              type="button"
+              aria-label="Menu sluiten"
+              className="fixed inset-0 top-16 z-40 bg-transparent md:hidden"
+              onClick={() => setOpen(false)}
+            />
+            <div
+              id="mobile-nav"
+              className="relative z-50 border-t border-white/10 bg-[#0B1220] py-4 shadow-lg md:hidden"
+            >
+              <ul className="flex flex-col gap-0.5">
+                {links.map(({ href, label }) => (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      className={`block rounded px-3 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/5 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-inset ${
+                        isActive(href) ? "text-white" : ""
+                      }`}
+                      onClick={() => setOpen(false)}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+                <li className="mt-2 border-t border-white/10 pt-2">
                   <Link
-                    href={href}
-                    className={`block rounded px-3 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/5 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-inset ${
-                      isActive(href) ? "text-white" : ""
-                    }`}
+                    href="/contact"
+                    className="mx-3 block rounded-lg border border-white/20 px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:border-white/40 hover:bg-white/5"
                     onClick={() => setOpen(false)}
                   >
-                    {label}
+                    Plan kennismaking
                   </Link>
                 </li>
-              ))}
-              <li className="mt-2 border-t border-white/10 pt-2">
-                <Link
-                  href="/contact"
-                  className="mx-3 block rounded-lg border border-white/20 px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:border-white/40 hover:bg-white/5"
-                  onClick={() => setOpen(false)}
-                >
-                  Plan kennismaking
-                </Link>
-              </li>
-            </ul>
-          </div>
+              </ul>
+            </div>
+          </>
         )}
       </Container>
     </header>

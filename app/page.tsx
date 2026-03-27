@@ -28,7 +28,7 @@ export default function HomePage() {
     <>
       {/* Hero – links light block, rechts afbeelding met diagonale rand */}
       <section className="relative flex min-h-[460px] flex-row lg:min-h-[480px]">
-        <div className="relative z-10 flex w-[58%] flex-col justify-center bg-bg-light px-4 py-12 sm:px-6 sm:py-20 lg:w-[45%] lg:pl-[max(1rem,calc((100%-72rem)/2+1rem))] lg:pr-12">
+        <div className="relative z-10 flex w-[52%] flex-col justify-center bg-bg-light px-4 py-12 sm:px-6 sm:py-20 lg:w-[45%] lg:pl-[max(1rem,calc((100%-72rem)/2+1rem))] lg:pr-12">
           <div className="mx-auto w-full max-w-2xl lg:mx-0">
             <h1 className="text-2xl font-bold tracking-tight text-primary sm:text-4xl">
               {home.hero.title}
@@ -60,14 +60,14 @@ export default function HomePage() {
             </ul>
           </div>
         </div>
-        <div className="relative min-h-[460px] w-[42%] lg:min-h-[520px] lg:w-[55%]">
+        <div className="relative min-h-[460px] w-[48%] lg:min-h-[520px] lg:w-[55%]">
           <Image
             src="/hero.png"
             alt=""
             fill
-            className="object-cover object-center [clip-path:polygon(12%_0,100%_0,100%_100%,0_100%)]"
+            className="object-cover object-[85%_center] lg:object-center [clip-path:polygon(12%_0,100%_0,100%_100%,0_100%)]"
             priority
-            sizes="(max-width: 640px) 42vw, (max-width: 1024px) 50vw, 55vw"
+            sizes="(max-width: 640px) 48vw, (max-width: 1024px) 50vw, 55vw"
           />
         </div>
       </section>
