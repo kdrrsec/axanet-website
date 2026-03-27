@@ -79,7 +79,10 @@ export function Header() {
         </div>
 
         {open && (
-          <div id="mobile-nav" className="border-t border-white/10 py-4 md:hidden">
+          <div
+            id="mobile-nav"
+            className="border-t border-white/10 bg-[#0B1220] py-4 shadow-lg md:hidden"
+          >
             <ul className="flex flex-col gap-0.5">
               {links.map(({ href, label }) => (
                 <li key={href}>
