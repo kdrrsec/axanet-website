@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { nav } from "@/lib/content";
 import { Container } from "./Container";
 
@@ -16,6 +16,10 @@ const RING_OFFSET = "focus-visible:ring-offset-[#0B1220]";
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -65,6 +69,7 @@ export function Header() {
             className="rounded p-2 text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1220] md:hidden"
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
+            aria-controls="mobile-nav"
             aria-label={open ? "Menu sluiten" : "Menu openen"}
           >
             <span className="block h-0.5 w-5 bg-current" />
@@ -74,7 +79,7 @@ export function Header() {
         </div>
 
         {open && (
-          <div className="border-t border-white/10 py-4 md:hidden">
+          <div id="mobile-nav" className="border-t border-white/10 py-4 md:hidden">
             <ul className="flex flex-col gap-0.5">
               {links.map(({ href, label }) => (
                 <li key={href}>

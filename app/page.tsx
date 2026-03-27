@@ -38,15 +38,15 @@ export default function HomePage() {
                 <p key={i}>{line}</p>
               ))}
             </div>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary/90 hover:translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary/90 hover:translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 sm:w-auto"
               >
                 {home.hero.ctaPrimary}
                 <span aria-hidden="true">→</span>
               </Link>
-              <Button href="/diensten" variant="secondary">
+              <Button href="/diensten" variant="secondary" className="w-full sm:w-auto">
                 {home.hero.ctaSecondary}
               </Button>
             </div>
@@ -65,7 +65,7 @@ export default function HomePage() {
             src="/hero.png"
             alt=""
             fill
-            className="object-cover object-center [clip-path:polygon(12%_0,100%_0,100%_100%,0_100%)]"
+            className="object-cover object-center lg:[clip-path:polygon(12%_0,100%_0,100%_100%,0_100%)]"
             priority
             sizes="(max-width: 1024px) 100vw, 55vw"
           />
