@@ -36,8 +36,7 @@ export function Header() {
               alt="Axanet"
               width={675}
               height={162}
-              className="header-logo-img object-contain object-left"
-              style={{ width: "675px", height: "162px", maxWidth: "none", minWidth: "675px" }}
+              className="h-auto w-[140px] object-contain object-left sm:w-[180px] md:w-[220px]"
             />
           </Link>
 
