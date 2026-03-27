@@ -18,6 +18,43 @@ const validatie = {
   emailOngeldig: "Vul een geldig e-mailadres in",
 };
 
+const WEB3FORMS_SUBMIT_URL = "https://api.web3forms.com/submit";
+
+function parseWeb3FormsResponse(
+  raw: string,
+  httpStatus: number
+): { ok: true } | { ok: false; message: string } {
+  if (
+    raw.includes("<!DOCTYPE") ||
+    raw.includes("<html") ||
+    /just a moment/i.test(raw)
+  ) {
+    return {
+      ok: false,
+      message:
+        "Het formulier kon niet worden verstuurd (beveiligingscontrole). Probeer het opnieuw, of neem contact op via e-mail of telefoon.",
+    };
+  }
+
+  try {
+    const payload = JSON.parse(raw) as { success?: boolean; message?: string };
+    if (!payload.success) {
+      return {
+        ok: false,
+        message: payload.message ?? "Versturen mislukt.",
+      };
+    }
+    return { ok: true };
+  } catch {
+    return {
+      ok: false,
+      message:
+        raw.trim().slice(0, 160) ||
+        `Versturen mislukt (HTTP ${httpStatus}).`,
+    };
+  }
+}
+
 export default function ContactPage() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -49,28 +86,41 @@ export default function ContactPage() {
 
     setStatus("sending");
 
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
+    if (!accessKey) {
+      setStatus("error");
+      setSubmitError(
+        "Het contactformulier is nog niet geconfigureerd. Neem contact op via e-mail of telefoon."
+      );
+      return;
+    }
+
+    const bericht = (data.get("bericht") as string)?.trim() || "";
+
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(WEB3FORMS_SUBMIT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          access_key: accessKey,
+          subject: `Contactformulier Axanet: ${naam}`,
+          name: naam,
+          email,
+          message: `Organisatie: ${organisatie}\n\nBericht:\n${bericht}`,
+          from_name: naam,
+          replyto: email,
           naam,
           organisatie,
-          email,
-          bericht: (data.get("bericht") as string)?.trim() || "",
+          bericht,
         }),
       });
 
-      if (!res.ok) {
-        let message = "Submit failed";
-        try {
-          const payload = (await res.json()) as { error?: string };
-          if (payload?.error) message = payload.error;
-        } catch {
-          // Keep fallback message
-        }
-        throw new Error(message);
+      const raw = await res.text();
+      const parsed = parseWeb3FormsResponse(raw, res.status);
+      if (!parsed.ok) {
+        throw new Error(parsed.message);
       }
+
       setStatus("success");
       setSubmitError("");
       form.reset();
@@ -219,7 +269,9 @@ export default function ContactPage() {
                 className="mt-4 text-sm text-red-700"
                 aria-live="assertive"
               >
-                {submitError || content.form.error}
+                {!submitError || submitError.includes("<")
+                  ? content.form.error
+                  : submitError}
               </p>
             )}
             {status === "error" && Object.keys(fieldErrors).length > 0 && (

@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Contact form handler.
+ * Contact form handler (server-side Web3Forms).
  *
- * OPTIE A – Web3Forms:
+ * Op Vercel kan Cloudflare de server-fetch naar api.web3forms.com blokkeren.
+ * De site gebruikt daarom primair directe browser-submit op /contact
+ * met NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY.
+ *
+ * OPTIE A – Web3Forms (deze route):
  * Zet in .env.local:
  *   WEB3FORMS_ACCESS_KEY=YOUR_ACCESS_KEY
  * Vervang YOUR_ACCESS_KEY door je key (na aanmelden op web3forms.com).
