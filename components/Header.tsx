@@ -40,7 +40,7 @@ export function Header() {
               alt="Axanet"
               width={675}
               height={162}
-              className="h-auto w-[140px] object-contain object-left sm:w-[180px] md:w-[220px]"
+              className="h-auto w-[170px] object-contain object-left sm:w-[200px] md:w-[220px]"
             />
           </Link>
 

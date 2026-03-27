@@ -27,18 +27,18 @@ export default function HomePage() {
   return (
     <>
       {/* Hero – links light block, rechts afbeelding met diagonale rand */}
-      <section className="relative flex min-h-[480px] flex-col lg:flex-row">
-        <div className="flex flex-1 flex-col justify-center bg-bg-light px-4 py-16 sm:px-6 sm:py-20 lg:pl-[max(1rem,calc((100%-72rem)/2+1rem))] lg:pr-12">
+      <section className="relative flex min-h-[460px] flex-row lg:min-h-[480px]">
+        <div className="relative z-10 flex w-[58%] flex-col justify-center bg-bg-light px-4 py-12 sm:px-6 sm:py-20 lg:w-[45%] lg:pl-[max(1rem,calc((100%-72rem)/2+1rem))] lg:pr-12">
           <div className="mx-auto w-full max-w-2xl lg:mx-0">
-            <h1 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">
+            <h1 className="text-2xl font-bold tracking-tight text-primary sm:text-4xl">
               {home.hero.title}
             </h1>
-            <div className="mt-4 space-y-2 text-lg text-text-muted">
+            <div className="mt-3 space-y-2 text-sm text-text-muted sm:mt-4 sm:text-lg">
               {home.hero.subtitle.map((line, i) => (
                 <p key={i}>{line}</p>
               ))}
             </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+            <div className="mt-6 flex flex-col gap-2 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
               <Link
                 href="/contact"
                 className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary/90 hover:translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 sm:w-auto"
@@ -50,7 +50,7 @@ export default function HomePage() {
                 {home.hero.ctaSecondary}
               </Button>
             </div>
-            <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-2 text-text-muted" role="list">
+            <ul className="mt-6 hidden flex-wrap gap-x-8 gap-y-2 text-text-muted sm:mt-8 sm:flex" role="list">
               {home.hero.bullets.map((label, i) => (
                 <li key={i} className="flex items-center gap-2">
                   <Checkmark />
@@ -60,14 +60,14 @@ export default function HomePage() {
             </ul>
           </div>
         </div>
-        <div className="relative min-h-[280px] w-full flex-1 lg:min-h-[520px] lg:max-w-[55%]">
+        <div className="relative min-h-[460px] w-[42%] lg:min-h-[520px] lg:w-[55%]">
           <Image
             src="/hero.png"
             alt=""
             fill
-            className="object-cover object-center lg:[clip-path:polygon(12%_0,100%_0,100%_100%,0_100%)]"
+            className="object-cover object-center [clip-path:polygon(12%_0,100%_0,100%_100%,0_100%)]"
             priority
-            sizes="(max-width: 1024px) 100vw, 55vw"
+            sizes="(max-width: 640px) 42vw, (max-width: 1024px) 50vw, 55vw"
           />
         </div>
       </section>
