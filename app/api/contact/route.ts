@@ -56,6 +56,8 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           access_key: WEB3FORMS_ACCESS_KEY,
           subject: `Contactformulier Axanet: ${naam.trim()}`,
+          name: naam.trim(),
+          message: `Organisatie: ${organisatie.trim()}\n\nBericht:\n${bericht?.trim() ?? ""}`,
           from_name: naam.trim(),
           naam: naam.trim(),
           organisatie: organisatie.trim(),
