@@ -21,6 +21,7 @@ const validatie = {
 export default function ContactPage() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [submitError, setSubmitError] = useState("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -44,6 +45,7 @@ export default function ContactPage() {
       return;
     }
     setFieldErrors({});
+    setSubmitError("");
 
     setStatus("sending");
 
@@ -59,12 +61,27 @@ export default function ContactPage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Submit failed");
+      if (!res.ok) {
+        let message = "Submit failed";
+        try {
+          const payload = (await res.json()) as { error?: string };
+          if (payload?.error) message = payload.error;
+        } catch {
+          // Keep fallback message
+        }
+        throw new Error(message);
+      }
       setStatus("success");
+      setSubmitError("");
       form.reset();
-    } catch {
+    } catch (error) {
       setStatus("error");
       setFieldErrors({});
+      if (error instanceof Error && error.message) {
+        setSubmitError(error.message);
+      } else {
+        setSubmitError(content.form.error);
+      }
     }
   }
 
@@ -202,7 +219,7 @@ export default function ContactPage() {
                 className="mt-4 text-sm text-red-700"
                 aria-live="assertive"
               >
-                {content.form.error}
+                {submitError || content.form.error}
               </p>
             )}
             {status === "error" && Object.keys(fieldErrors).length > 0 && (
