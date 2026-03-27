@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-text-main antialiased;
+  }
+}
+
+/* Header logo: vast 200px breed (Tailwind base zet img op max-width: 100%) */
+header .header-logo-img {
+  width: 200px !important;
+  min-width: 200px !important;
+  max-width: none !important;
+}
+
