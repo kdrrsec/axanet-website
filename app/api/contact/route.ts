@@ -1,22 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Contact form handler (server-side Web3Forms).
+ * Contact form handler (server-side Formspree).
  *
- * Op Vercel kan Cloudflare de server-fetch naar api.web3forms.com blokkeren.
- * De site gebruikt daarom primair directe browser-submit op /contact
- * met NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY.
- *
- * OPTIE A – Web3Forms (deze route):
- * Zet in .env.local:
- *   WEB3FORMS_ACCESS_KEY=YOUR_ACCESS_KEY
- * Vervang YOUR_ACCESS_KEY door je key (na aanmelden op web3forms.com).
- *
- * OPTIE B – Geen WEB3FORMS_ACCESS_KEY:
- * Dan retourneert deze route altijd 200 (geschikt voor test; je kunt later
- * e-mail sturen of een andere provider koppelen).
+ * Zet in .env.local / Vercel:
+ *   FORMSPREE_ENDPOINT=https://formspree.io/f/YOUR_FORM_ID
  */
-const WEB3FORMS_ACCESS_KEY = process.env.WEB3FORMS_ACCESS_KEY;
+const FORMSPREE_ENDPOINT = process.env.FORMSPREE_ENDPOINT;
 
 type Body = {
   naam?: string;
@@ -52,63 +42,45 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (WEB3FORMS_ACCESS_KEY) {
+  if (FORMSPREE_ENDPOINT) {
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: `Contactformulier Axanet: ${naam.trim()}`,
-          name: naam.trim(),
-          message: `Organisatie: ${organisatie.trim()}\n\nBericht:\n${bericht?.trim() ?? ""}`,
-          from_name: naam.trim(),
-          replyto: email.trim(),
           naam: naam.trim(),
           organisatie: organisatie.trim(),
           email: email.trim(),
           bericht: bericht?.trim() ?? "",
+          _subject: `Contactformulier Axanet: ${naam.trim()}`,
         }),
       });
 
-      const raw = await res.text();
-      let payload: { success?: boolean; message?: string } = {};
-      try {
-        payload = JSON.parse(raw) as { success?: boolean; message?: string };
-      } catch {
-        console.error("Web3Forms non-JSON response:", res.status, raw);
-        return NextResponse.json(
-          {
-            error:
-              raw.trim().slice(0, 400) ||
-              `E-maildienst reageerde onverwacht (HTTP ${res.status}).`,
-          },
-          { status: 502 }
-        );
-      }
-
       if (!res.ok) {
-        console.error("Web3Forms HTTP error:", res.status, payload, raw);
-        return NextResponse.json(
-          {
-            error:
-              payload.message ||
-              raw.trim().slice(0, 400) ||
-              `Versturen mislukt (HTTP ${res.status}).`,
-          },
-          { status: 502 }
-        );
-      }
+        const raw = await res.text();
+        let message = "Versturen mislukt";
+        try {
+          const payload = JSON.parse(raw) as {
+            error?: string;
+            errors?: Array<{ message?: string }>;
+          };
+          message =
+            payload.error ||
+            payload.errors?.[0]?.message ||
+            raw.trim().slice(0, 240) ||
+            message;
+        } catch {
+          message = raw.trim().slice(0, 240) || message;
+        }
 
-      if (!payload.success) {
-        console.error("Web3Forms API failure:", payload);
-        return NextResponse.json(
-          { error: payload.message ?? "Versturen mislukt" },
-          { status: 502 }
-        );
+        console.error("Formspree error:", res.status, message);
+        return NextResponse.json({ error: message }, { status: 502 });
       }
     } catch (err) {
-      console.error("Web3Forms fetch error:", err);
+      console.error("Formspree fetch error:", err);
       return NextResponse.json(
         { error: "Versturen mislukt" },
         { status: 502 }
