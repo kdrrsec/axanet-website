@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { home } from "@/lib/content";
@@ -5,6 +6,10 @@ import { Section } from "@/components/Section";
 import { Container } from "@/components/Container";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 function Checkmark() {
   return (

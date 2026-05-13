@@ -7,7 +7,8 @@ import { Button } from "@/components/Button";
 export const metadata: Metadata = {
   title: "Over Axanet – Axanet",
   description:
-    "Wie is Axanet: IT support, servicedesk en werkplekbeheer voor bedrijven en organisaties. Werkwijze in drie stappen.",
+    "Wie is Axanet: IT support, ICT-dienstverlening, servicedesk en werkplekbeheer voor bedrijven in Nederland. Werkwijze in drie stappen.",
+  alternates: { canonical: "/over" },
   openGraph: {
     title: "Over Axanet – Axanet",
     description: "Werkwijze en wat u kunt verwachten van Axanet.",

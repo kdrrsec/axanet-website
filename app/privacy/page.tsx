@@ -6,6 +6,7 @@ import { Section } from "@/components/Section";
 export const metadata: Metadata = {
   title: "Privacy – Axanet",
   description: "Hoe Axanet omgaat met uw persoonsgegevens.",
+  alternates: { canonical: "/privacy" },
   openGraph: {
     title: "Privacy – Axanet",
     description: "Privacy-informatie van Axanet.",

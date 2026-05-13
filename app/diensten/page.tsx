@@ -7,7 +7,8 @@ import { Card } from "@/components/Card";
 export const metadata: Metadata = {
   title: "Diensten – Axanet",
   description:
-    "Servicedesk, werkplekbeheer en Microsoft 365-beheer. Duidelijke afspraken, vaste aanspreekpunten.",
+    "Servicedesk, werkplekbeheer en Microsoft 365-beheer in Nederland. Duidelijke afspraken, vaste aanspreekpunten.",
+  alternates: { canonical: "/diensten" },
   openGraph: {
     title: "Diensten – Axanet",
     description:
